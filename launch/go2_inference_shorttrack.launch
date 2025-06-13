@@ -1,0 +1,9 @@
+<launch>
+
+    <node pkg="teleop_twist_keyboard" name="keyboard_teleop" type="teleop_twist_keyboard.py"
+          output="screen" launch-prefix="gnome-terminal --"/>
+
+    <node pkg="choreonoid_ros" name="choreonoid" type="choreonoid"
+          args="$(find choreonoid_ros_tutorial)/project/ros_go2_inference_shorttrack.cnoid --start-simulation" />
+
+</launch>
