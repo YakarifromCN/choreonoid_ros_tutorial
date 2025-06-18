@@ -25,12 +25,15 @@ items:
           data:
             file: "/home/leus/Agent_System/genesis_ws/Genesis/genesis/assets/urdf/go2/urdf/go2.urdf"
             format: URDF
-            rootPosition: [ 0, 0, 0.434187785 ]
+            rootPosition: [ 1.4256957, -0.313895457, -6.28183296 ]
             rootAttitude: [
-              1, 0, 0,
-              0, 1, 0,
-              0, 0, 1 ]
+              -0.370021544, 0.562452613, -0.739412682,
+              0.67428777, 0.71009828, 0.202722559,
+              0.639077507, -0.423565214, -0.642006581 ]
             jointDisplacements: [
+              0.221279, 66.6783, -55.0044, -3.40785, 28.484, -86.4177, 28.5184, 57.4648, -63.2169, -8.18211,
+              58.7836, -78.2614 ]
+            initialJointDisplacements: [
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0 ]
             initialRootPosition: [ 0, 0, 0.434187785 ]
@@ -58,7 +61,7 @@ items:
                 reloading: false
                 export_symbols: false
         -
-          id: 5
+          id: 4
           name: "AISTSimulator"
           plugin: Body
           class: AISTSimulatorItem
@@ -75,7 +78,6 @@ items:
             record_collision_data: false
             controller_options: ""
             block_scene_view_edit_mode: false
-            time_sync_items: [ 4, 7 ]
             dynamicsMode: "Forward dynamics"
             integrationMode: semi-implicit_euler
             gravity: [ 0, 0, -9.80665 ]
@@ -90,6 +92,17 @@ items:
             kinematicWalking: false
             2Dmode: false
             oldAccelSensorMode: false
+          children:
+            -
+              id: 5
+              name: "AthleticsWorldLogFile"
+              plugin: Body
+              class: WorldLogFileItem
+              data:
+                file: "../log/AthleticsWorldLogFile.log"
+                format: CNOID-WORLD-LOG
+                timeStampSuffix: true
+                recordingFrameRate: 0
         -
           id: 6
           name: "HVAC2023_athletics_field"
@@ -104,7 +117,7 @@ items:
               1, 0, 0,
               0, 1, 0,
               0, 0, 1 ]
-            jointDisplacements: [ 1.4341e-14, 0, -4.83504e-15, 0, -1.72542e-14 ]
+            jointDisplacements: [ 2.92883e-14, 0, 1.24391e-14, 0, -3.13439e-14 ]
             initialJointDisplacements: [ 0, 0, 0, 0, 0 ]
             initialRootPosition: [ 0, 0, 0 ]
             initialRootAttitude: [
@@ -129,7 +142,7 @@ views:
     class: ItemTreeView
     mounted: true
     state:
-      expanded: [ 1, 2, 3, 6 ]
+      expanded: [ 1, 2, 3, 4, 6 ]
   -
     id: 2
     plugin: Base
@@ -161,9 +174,9 @@ views:
         -
           camera: [ System, Perspective ]
           isCurrent: true
-          eye: [ -2.91044, 6.38562, 2.35115 ]
-          direction: [ 0.490009, -0.776647, -0.395868 ]
-          up: [ 0.211235, -0.3348, 0.918307 ]
+          eye: [ -5.95217, 0.577886, 4.36032 ]
+          direction: [ 0.752321, 0.0467454, -0.657136 ]
+          up: [ 0.655871, 0.0407524, 0.753772 ]
         -
           camera: [ System, Orthographic ]
           orthoHeight: 20
@@ -244,7 +257,7 @@ views:
     mounted: true
 toolbars:
   "TimeBar":
-    current_time: 0
+    current_time: 10.186
     min_time: 0
     max_time: 30
     frame_rate: 1000
