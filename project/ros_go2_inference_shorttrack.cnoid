@@ -30,10 +30,10 @@ items:
               0, 1, 0,
               0, 0, 1 ]
             jointDisplacements: [
-              0, 0, 0, -5.72958, 0, 0, 0, -5.72958, -5.72958, -8.49793e-322,
-              -8.49793e-322, -8.49793e-322, 0, -6.3145e-65, -5.72958, -5.72958, -5.72958, -5.72958, -5.72958, -1.02173e-220,
-              -8.49793e-322, -5.72958, -0.0130839, -0.0130839, -0.013084, -0.0130839, -1.41766e-28, -5.71649, -1.52057, -5.36662,
-              -3.69341, -0.130755, -3.69425, -0.573287, -0.329768 ]
+              0, 0, 0, -5.72958, 0, 0, 0, 0, 0, 0,
+              -5.72958, 0, 0, 0, -8.49793e-322, -8.49793e-322, -8.49793e-322, -5.72958, -8.49793e-322, 0,
+              0, 0, 0, 0, -5.72958, 0, -8.49793e-322, 0, -8.49793e-322, 0,
+              0, -5.72958, 0, 0, -8.49793e-322 ]
             initialJointDisplacements: [
               0, 0, 0, -5.72958, 0, 0, 0, 0, 0, 0,
               -5.72958, 0, 0, 0, -5.72958, -5.72958, -5.72958, -5.72958, -5.72958, 0,
@@ -68,7 +68,6 @@ items:
           name: "AISTSimulator"
           plugin: Body
           class: AISTSimulatorItem
-          is_selected: true
           data:
             time_step: 0.001
             realtime_sync_mode: compensatory
@@ -100,13 +99,13 @@ items:
           children:
             -
               id: 6
-              name: "WorldLogFile"
+              name: "ShorttrackLogFile"
               plugin: Body
               class: WorldLogFileItem
+              is_selected: true
+              is_checked: true
               data:
-                file: "vnoid_sample_project_log"
-                format: CNOID-WORLD-LOG
-                timeStampSuffix: false
+                timeStampSuffix: true
                 recordingFrameRate: 0
             -
               id: 7
@@ -132,19 +131,18 @@ items:
           name: "go2_description"
           plugin: Body
           class: BodyItem
-          is_selected: true
           is_checked: true
           data:
             file: "/home/leus/Agent_System/genesis_ws/Genesis/genesis/assets/urdf/go2/urdf/go2.urdf"
             format: URDF
-            rootPosition: [ 0.355529498, 0.134872619, 0.266761384 ]
+            rootPosition: [ 0.0250533229, -0.0275873181, 0.299170689 ]
             rootAttitude: [
-              0.975817801, -0.0920703582, -0.198249008,
-              0.111172805, 0.98994469, 0.0874649518,
-              0.188202624, -0.107389755, 0.97624137 ]
+              0.997421341, 0.0292815412, 0.0655229773,
+              -0.0266051038, 0.998790286, -0.0413537465,
+              -0.0666546147, 0.0395038637, 0.996993785 ]
             jointDisplacements: [
-              23.4385, 36.5618, -80.1551, 8.78839, 32.0849, -88.8658, -6.16342, 37.7749, -118.498, -18.4481,
-              43.8139, -96.1145 ]
+              16.2266, 53.4716, -80.016, -18.3773, 38.5489, -90.841, 1.9736, 52.5649, -87.9324, 4.25403,
+              53.9702, -97.0606 ]
             initialJointDisplacements: [
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0 ]
@@ -189,7 +187,7 @@ views:
     class: ItemTreeView
     mounted: true
     state:
-      expanded: [ 1, 3, 8, 9 ]
+      expanded: [ 1, 2, 3, 5, 8, 9 ]
   -
     id: 3
     plugin: Base
@@ -404,7 +402,7 @@ views:
     class: PythonConsoleView
 toolbars:
   "TimeBar":
-    current_time: 58.264
+    current_time: 7.985
     min_time: 0
     max_time: 72.445
     frame_rate: 1000
