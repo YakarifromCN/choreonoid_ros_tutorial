@@ -1,82 +1,246 @@
 # Choreonoid ROS Tutorial: Go2 Inference Controller with ROS Integration
 
-This is a project for the "Agent Systems" course at the Graduate School of Information Science and Technology, The University of Tokyo.
+This project, developed for the "Agent Systems" course at the Graduate School of Information Science and Technology, The University of Tokyo, demonstrates the integration of a pre-trained AI model with the Robot Operating System (ROS) within the Choreonoid simulator.
+
+---
 
 ## Overview
 
-This project runs a pre-trained quadruped robot ("Go2") walking policy within the Choreonoid simulator.
+This project runs a pre-trained walking policy for a **Go2** quadruped robot inside the Choreonoid simulator. Its primary feature is the fusion of two key concepts:
 
-Its key feature is the integration of the **Inference Controller** (from Lecture 7), which uses a pre-trained AI model, with **ROS (Robot Operating System) remote control** (from Lecture 8). This allows the robot to maintain its autonomous walking behavior via the AI policy while enabling a user to interactively control its target velocity in real-time using keyboard commands sent through the `/cmd_vel` ROS topic.
+- **AI-Powered Control**: An `InferenceController` loads a pre-trained neural network model using **LibTorch** (the PyTorch C++ API). This model is responsible for generating the robot's base walking gait.
+- **Real-Time ROS Interaction**: The controller subscribes to the `/cmd_vel` ROS topic to receive velocity commands from an external source (e.g., keyboard input).
 
-## Dependencies & Prerequisites
+This architecture allows the robot to maintain autonomous walking behavior while enabling real-time interactive control via standard ROS tools.
 
-To successfully build and run this project, the following environment is required.
+---
 
-1.  **ROS Noetic**: A standard ROS environment.
-2.  **Choreonoid**: The version of Choreonoid set up within the course's ROS workspace.
-3.  **LibTorch (PyTorch C++ API)**:
-    * It is assumed to be located at the following path:
-        `path/to/your/genesis_ws/libtorch`
-    * e.g., `~/Agent_System/genesis_ws/libtorch`
+## How It Works
 
-4.  **Genesis & Trained Models**:
-    * The `Genesis` project is required for the Inference Controller to load the AI model (`.pt` file) and configuration file (`.yaml` file).
-    * This project assumes that trained model logs exist at:
-        `path/to/your/genesis_ws/logs/go2-walking/`
-    * e.g., `~/Agent_System/genesis_ws/logs/go2-walking/`
-    * Furthermore, a symbolic link named `inference_target` must be correctly configured to point to the desired model directory for inference.
-        ```bash
-        # Example command to create the symbolic link
-        cd path/to/your/genesis_ws/logs/go2-walking/
-        ln -s sub20_com_fric0.2-1.8_kp18-30_kv0.7-1.2_rotI0.01-0.15_iter200/ inference_target
-        ```
-5.  **xterm**:
-    * Required by the launch file to open a new terminal window. If not installed, please install it with the following command:
-        ```bash
-        sudo apt update
-        sudo apt install xterm
-        ```
+The core logic is handled by the `InferenceController`, a custom C++ `SimpleController` plugin for Choreonoid. The data flow is as follows:
 
+1. **User Input**: `teleop_twist_keyboard` captures keyboard commands.
+2. **ROS Topic**: A `geometry_msgs/Twist` message is published to `/cmd_vel`.
+3. **Controller**: `InferenceController` subscribes to `/cmd_vel` and receives the velocity command.
+4. **AI Inference**: The velocity and robot state are fed into the pre-trained LibTorch model.
+5. **Robot Action**: The model outputs joint positions, which are converted to torques using a PD controller and applied to the robot.
+
+---
+
+## Project Structure
+```
+<YOUR_PROJECT_DIR>/
+├── ros/
+│ └── src/
+│ └── choreonoid_ros_tutorial/
+│ ├── CMakeLists.txt
+│ ├── package.xml
+│ ├── README.md
+│ ├── launch/
+│ │ ├── go2_inference_shorttrack.launch
+│ │ └── go2_inference_athletics.launch
+│ └── src/
+│ ├── CMakeLists.txt
+│ ├── InferenceController.cpp
+│ └── RttTankController.cpp
+└── genesis_ws/
+├── ... (Genesis and LibTorch files)
+```
+---
+
+## Prerequisites and Dependencies
+
+### Software Dependencies
+
+- Ubuntu 20.04 LTS
+- ROS Noetic
+- Choreonoid
+- LibTorch (PyTorch C++ API)
+- `xterm`: install via `sudo apt install xterm`
+
+### ROS Package Dependencies (see `package.xml`)
+
+- `catkin`
+- `choreonoid`, `choreonoid_ros`
+- `std_msgs`, `sensor_msgs`, `image_transport`
+- `teleop_twist_keyboard` (runtime dependency)
+
+### Asset Paths
+
+Replace `<YOUR_PROJECT_DIR>` with your project directory name (e.g., `Agent_System`).
+
+- **LibTorch Path**: `~/<YOUR_PROJECT_DIR>/genesis_ws/libtorch`
+- **Trained Model Path**: `~/<YOUR_PROJECT_DIR>/genesis_ws/logs/go2-walking/`
+
+Create a symbolic link to the model:
+
+```bash
+cd ~/<YOUR_PROJECT_DIR>/genesis_ws/logs/go2-walking/
+ln -s your_chosen_model_directory/ inference_target
+```
+---
 ## Build Instructions
 
-1.  Navigate to the root of your ROS workspace.
-    ```bash
-    cd path/to/your/agent_system_ws/
-    ```
-    e.g., `cd ~/Agent_System/ros/agent_system_ws/`
+> Note: Replace `<YOUR_PROJECT_DIR>` with your chosen main directory name.
 
-2.  (Recommended) Use `rosdep` to install system dependencies listed in `package.xml`.
-    ```bash
-    rosdep install --from-paths . -r -y -i
-    ```
+### Navigate to Your Catkin Workspace
 
-3.  Compile the project using `catkin build`. You must pass the path to your LibTorch installation as a CMake argument.
-    ```bash
-    catkin build choreonoid_ros_tutorial --force-cmake --cmake-args -DTorch_DIR="path/to/your/genesis_ws/libtorch/share/cmake/Torch"
-    ```
-    e.g., `-DTorch_DIR="${HOME}/Agent_System/genesis_ws/libtorch/share/cmake/Torch"`
+```bash
+cd ~/<YOUR_PROJECT_DIR>/ros/
+```
+### Install Dependencies (Recommended)
+
+```bash
+rosdep install --from-paths src -r -y -i
+```
+
+### Build with Catkin
+
+You must provide the path to your LibTorch installation via a CMake argument:
+
+```bash
+catkin build choreonoid_ros_tutorial \
+  --force-cmake \
+  --cmake-args -DTorch_DIR="${HOME}/<YOUR_PROJECT_DIR>/genesis_ws/libtorch/share/cmake/Torch"
+```
 
 ## Execution Instructions
 
-1.  Open a new terminal and source the workspace's setup file.
-    ```bash
-    cd path/to/your/agent_system_ws/ && source devel/setup.bash
-    ```
-    e.g., `cd ~/Agent_System/ros/agent_system_ws/ && source devel/setup.bash`
+### Source the Workspace
 
-2.  Use the `roslaunch` command to start the simulator and the keyboard control node simultaneously.
-    ```bash
-    roslaunch choreonoid_ros_tutorial go2_inference_shorttrack.launch
-    ```
+```bash
+cd ~/<YOUR_PROJECT_DIR>/ros/
+source devel/setup.bash
+```
+### Launch the Simulation
 
-## Usage & Controls
+- For **Short Track**:
 
-1.  After running the `roslaunch` command, the Choreonoid window and a new terminal window for keyboard input will appear.
-2.  **You must click on the new keyboard input terminal to make it the active window.**
-3.  Use the following keys to control the Go2 robot:
-    * `i` : Move forward
-    * `,` : Move backward
-    * `j` : Turn left
-    * `l` : Turn right
-    * `k` : Stop
-    * Please follow the other key instructions displayed in the `teleop_twist_keyboard` terminal.
+  ```bash
+  roslaunch choreonoid_ros_tutorial go2_inference_shorttrack.launch
+  ```
+
+- For **Athletics**:
+
+  ```bash
+  roslaunch choreonoid_ros_tutorial go2_inference_athletics.launch
+  ```
+## Usage and Controls
+
+After launching, two windows will appear: the Choreonoid simulation and an `xterm` terminal.
+
+- Click on the keyboard input terminal to make it the active window.
+- Use the following keys to control the Go2 robot's target velocity:
+
+```
+i : Move forward
+, : Move backward
+j : Turn left
+l : Turn right
+k : Stop all movement
+```
+
+Follow the other on-screen instructions in the keyboard terminal for more options.
+
+## Simulation Logging
+
+Choreonoid provides a powerful logging feature to record and play back entire simulations.
+
+### Recording a Simulation
+
+1. Open Project: Start Choreonoid and load your desired project file (e.g., via `roslaunch`).
+2. Add Log Item: In the Choreonoid menu, go to `File > New > WorldLogFile`.
+3. Set Parent: In the Items view, drag the newly created `WorldLogFile` item and drop it onto the `AISTSimulator` item.
+4. Configure Log File:
+   - Set the `Log file` field (e.g., `my_run`)
+   - Set `Time-stamp suffix` to `True` (optional)
+5. Run and Stop: Start simulation and stop it when finished.
+6. Save Log: Right-click `WorldLogFile` > `Save project as log playback archive`.
+
+### Playing Back a Simulation
+
+- Choreonoid will automatically switch to playback mode.
+- Press the main **Play** button to watch the replay.
+- To view later, open the `.cnoid` project file in Choreonoid.
+
+## Appendix: Environment Setup from Scratch
+
+This guide details the steps to set up a complete development environment on Ubuntu 20.04.
+
+### Step 0: Create Project Directory
+
+```bash
+mkdir ~/<YOUR_PROJECT_DIR>
+```
+
+### Step 1: Install Base System and ROS Noetic
+
+```bash
+sudo apt update
+sudo apt install curl git
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+sudo apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
+sudo apt update
+sudo apt install ros-noetic-desktop
+echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+sudo apt install python3-vcstool python3-catkin-tools python3-rosdep
+sudo rosdep init
+rosdep update
+```
+
+### Step 2: Set up Python 3.10 Virtual Environment for Genesis
+
+```bash
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt install python3.10 python3.10-venv -y
+mkdir -p ~/<YOUR_PROJECT_DIR>/genesis_ws
+cd ~/<YOUR_PROJECT_DIR>/genesis_ws
+python3.10 -m venv genesis_env
+source genesis_env/bin/activate
+```
+
+### Step 3: Install Genesis, PyTorch, and AI Dependencies
+
+```bash
+cd ~/<YOUR_PROJECT_DIR>/genesis_ws
+git clone https://github.com/kindsenior/Genesis.git -b agent_system_lecture2025
+cd Genesis
+pip install -r requirements_Ubuntu20.04_agent-system_cpu.txt
+# or for GPU:
+# pip install -r requirements_Ubuntu20.04_agent-system_cuda.txt
+```
+
+### Step 4: Install LibTorch (PyTorch C++ API)
+
+```bash
+cd ~/<YOUR_PROJECT_DIR>/genesis_ws
+wget https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-2.7.0%2Bcpu.zip
+unzip libtorch-cxx11-abi-shared-with-deps-2.7.0+cpu.zip
+echo "export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:${HOME}/<YOUR_PROJECT_DIR>/genesis_ws/libtorch/lib" >> ~/.bashrc
+source ~/.bashrc
+```
+
+### Step 5: Create Catkin Workspace and Build Project
+
+```bash
+mkdir -p ~/<YOUR_PROJECT_DIR>/ros/src
+cd ~/<YOUR_PROJECT_DIR>/ros/src
+git clone https://github.com/agent-system/lecture2025.git
+vcs import --input lecture2025/.rosinstall
+git clone https://github.com/choreonoid/choreonoid_ros.git
+cd ~/<YOUR_PROJECT_DIR>/ros
+rosdep install --from-paths src -r -i -y
+cd src/choreonoid/misc/script/
+./install-requisites-ubuntu-20.04.sh
+echo "export CNOID_USE_GLSL=0" >> ~/.bashrc
+source ~/.bashrc
+cd ~/<YOUR_PROJECT_DIR>/ros
+catkin build choreonoid_ros_tutorial \
+  --force-cmake \
+  --cmake-args -DTorch_DIR="${HOME}/<YOUR_PROJECT_DIR>/genesis_ws/libtorch/share/cmake/Torch"
+```
+
+After these steps, your environment is fully configured. You can now proceed with the **Execution Instructions**.
+

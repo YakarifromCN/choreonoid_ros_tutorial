@@ -30,10 +30,10 @@ items:
               0, 1, 0,
               0, 0, 1 ]
             jointDisplacements: [
-              0, 0, 0, -5.72958, 0, 0, 0, 0, 0, 0,
-              -5.72958, 0, 0, 0, -8.49793e-322, -8.49793e-322, -8.49793e-322, -5.72958, -8.49793e-322, 0,
-              0, 0, 0, 0, -5.72958, 0, -8.49793e-322, 0, -8.49793e-322, 0,
-              0, -5.72958, 0, 0, -8.49793e-322 ]
+              0, 0, 0, -5.72958, 0, 0, 0, -5.72958, -5.72958, -5.72958,
+              -5.72958, -5.72958, 0, 0, -5.72958, -5.72958, -5.72958, -5.72958, -5.72958, -0,
+              -0, -5.719e-15, -0.000139119, -8.91971e-10, -2.351e-25, -8.91971e-10, -5.72958, -3.66677e-20, -1.40091, -1.56252,
+              -0.0393839, -1.38614, -1.42414, -0.545557, -0.00350636 ]
             initialJointDisplacements: [
               0, 0, 0, -5.72958, 0, 0, 0, 0, 0, 0,
               -5.72958, 0, 0, 0, -5.72958, -5.72958, -5.72958, -5.72958, -5.72958, 0,
@@ -102,9 +102,10 @@ items:
               name: "ShorttrackLogFile"
               plugin: Body
               class: WorldLogFileItem
-              is_selected: true
               is_checked: true
               data:
+                file: "../log/ShorttrackLogFile.log"
+                format: CNOID-WORLD-LOG
                 timeStampSuffix: true
                 recordingFrameRate: 0
             -
@@ -135,14 +136,14 @@ items:
           data:
             file: "/home/leus/Agent_System/genesis_ws/Genesis/genesis/assets/urdf/go2/urdf/go2.urdf"
             format: URDF
-            rootPosition: [ 0.0250533229, -0.0275873181, 0.299170689 ]
+            rootPosition: [ 0.44287768, -0.160763234, 0.242909372 ]
             rootAttitude: [
-              0.997421341, 0.0292815412, 0.0655229773,
-              -0.0266051038, 0.998790286, -0.0413537465,
-              -0.0666546147, 0.0395038637, 0.996993785 ]
+              0.861097743, -0.317846322, -0.396843026,
+              0.304961027, 0.947403451, -0.0970848607,
+              0.406828519, -0.0374221048, 0.912737717 ]
             jointDisplacements: [
-              16.2266, 53.4716, -80.016, -18.3773, 38.5489, -90.841, 1.9736, 52.5649, -87.9324, 4.25403,
-              53.9702, -97.0606 ]
+              -5.6315, 33.8514, -79.0565, 0.930787, 52.2295, -85.9108, 32.4391, 35.3928, -100.281, -27.0382,
+              31.2081, -96.2263 ]
             initialJointDisplacements: [
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0 ]
@@ -256,7 +257,7 @@ views:
     class: SceneView
     mounted: true
     state:
-      editMode: true
+      editMode: false
       viewpointOperationMode: thirdPerson
       visible_polygon_elements: [ face ]
       highlighting: false
@@ -264,13 +265,13 @@ views:
       cameras:
         -
           camera: [ System, Perspective ]
-          eye: [ 2.56738, -7.3237, 1.03166 ]
-          direction: [ -0.136506, 0.98236, -0.127805 ]
-          up: [ -0.0175904, 0.126589, 0.991799 ]
+          eye: [ 1.37234, -13.2098, 5.00891 ]
+          direction: [ 0.491491, 0.81636, -0.303302 ]
+          up: [ 0.15644, 0.259844, 0.952894 ]
         -
           camera: [ System, Orthographic ]
           isCurrent: true
-          orthoHeight: 2.70671
+          orthoHeight: 12.0049
       lighting_mode: normal
       culling_mode: enabled
       shading_mode: smooth
@@ -402,7 +403,7 @@ views:
     class: PythonConsoleView
 toolbars:
   "TimeBar":
-    current_time: 7.985
+    current_time: 16.546
     min_time: 0
     max_time: 72.445
     frame_rate: 1000
@@ -425,8 +426,8 @@ toolbars:
     lazyCollisionDetectionMode: true
 Body:
   "BodySelectionManager":
-    current_body_item: 8
-    current_link: "base"
+    current_body_item: 2
+    current_link: "Base"
   "KinematicFaultChecker":
     checkJointPositions: true
     angleMargin: 0
