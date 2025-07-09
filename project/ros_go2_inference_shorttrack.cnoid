@@ -30,11 +30,6 @@ items:
               0, 1, 0,
               0, 0, 1 ]
             jointDisplacements: [
-              0, 0, 0, -5.72958, 0, 0, 0, -5.72958, -5.72958, -5.72958,
-              -5.72958, -5.72958, 0, 0, -5.72958, -5.72958, -5.72958, -5.72958, -5.72958, -0,
-              -0, -5.719e-15, -0.000139119, -8.91971e-10, -2.351e-25, -8.91971e-10, -5.72958, -3.66677e-20, -1.40091, -1.56252,
-              -0.0393839, -1.38614, -1.42414, -0.545557, -0.00350636 ]
-            initialJointDisplacements: [
               0, 0, 0, -5.72958, 0, 0, 0, 0, 0, 0,
               -5.72958, 0, 0, 0, -5.72958, -5.72958, -5.72958, -5.72958, -5.72958, 0,
               0, 0, 0, 0, 0, 0, -5.72958, 0, -5.72958, 0,
@@ -56,18 +51,20 @@ items:
               name: "SimpleController"
               plugin: Body
               class: SimpleControllerItem
+              is_selected: true
               data:
                 isNoDelayMode: false
                 controllerOptions: ""
-                controller: "vnoid_shorttrack_controller"
+                controller: "InferenceController"
                 base_directory: "Controller directory"
                 reloading: false
                 export_symbols: false
         -
-          id: 5
+          id: 6
           name: "AISTSimulator"
           plugin: Body
           class: AISTSimulatorItem
+          is_selected: true
           data:
             time_step: 0.001
             realtime_sync_mode: compensatory
@@ -81,7 +78,7 @@ items:
             record_collision_data: false
             controller_options: ""
             block_scene_view_edit_mode: false
-            time_sync_items: [ 4, 10 ]
+            time_sync_items: [ 5, 11 ]
             dynamicsMode: "Forward dynamics"
             integrationMode: runge-kutta
             gravity: [ 0, 0, -9.80665 ]
@@ -98,7 +95,7 @@ items:
             oldAccelSensorMode: false
           children:
             -
-              id: 6
+              id: 7
               name: "ShorttrackLogFile"
               plugin: Body
               class: WorldLogFileItem
@@ -109,7 +106,7 @@ items:
                 timeStampSuffix: true
                 recordingFrameRate: 0
             -
-              id: 7
+              id: 8
               name: "GLVisionSimulator"
               plugin: Body
               class: GLVisionSimulatorItem
@@ -128,7 +125,7 @@ items:
                 enable_additional_lights: true
                 antialiasing: false
         -
-          id: 8
+          id: 9
           name: "go2_description"
           plugin: Body
           class: BodyItem
@@ -136,14 +133,14 @@ items:
           data:
             file: "/home/leus/Agent_System/genesis_ws/Genesis/genesis/assets/urdf/go2/urdf/go2.urdf"
             format: URDF
-            rootPosition: [ 0.44287768, -0.160763234, 0.242909372 ]
+            rootPosition: [ -0.181432689, -0.00162426494, 0.0570818694 ]
             rootAttitude: [
-              0.861097743, -0.317846322, -0.396843026,
-              0.304961027, 0.947403451, -0.0970848607,
-              0.406828519, -0.0374221048, 0.912737717 ]
+              0.999983438, 0.00574968012, -0.000254631895,
+              -0.00575010164, 0.999982045, -0.00168680659,
+              0.000244928724, 0.00168824281, 0.999998545 ]
             jointDisplacements: [
-              -5.6315, 33.8514, -79.0565, 0.930787, 52.2295, -85.9108, 32.4391, 35.3928, -100.281, -27.0382,
-              31.2081, -96.2263 ]
+              -6.7146, -207.631, 212.696, 6.23309, -208.275, 215.997, -6.36804, -207.832, 212.971, 3.43351,
+              -209.982, 212.474 ]
             initialJointDisplacements: [
               0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
               0, 0 ]
@@ -160,7 +157,7 @@ items:
             zmp: [ 0, 0, 0 ]
           children:
             -
-              id: 9
+              id: 10
               name: "InferenceController"
               plugin: Body
               class: SimpleControllerItem
@@ -188,7 +185,7 @@ views:
     class: ItemTreeView
     mounted: true
     state:
-      expanded: [ 1, 2, 3, 5, 8, 9 ]
+      expanded: [ 1, 2, 3, 6, 9, 10 ]
   -
     id: 3
     plugin: Base
@@ -265,13 +262,13 @@ views:
       cameras:
         -
           camera: [ System, Perspective ]
-          eye: [ 1.37234, -13.2098, 5.00891 ]
+          eye: [ -3.11253, -10.9097, 3.93217 ]
           direction: [ 0.491491, 0.81636, -0.303302 ]
-          up: [ 0.15644, 0.259844, 0.952894 ]
+          up: [ 0.156439, 0.259844, 0.952894 ]
         -
           camera: [ System, Orthographic ]
           isCurrent: true
-          orthoHeight: 12.0049
+          orthoHeight: 4.41636
       lighting_mode: normal
       culling_mode: enabled
       shading_mode: smooth
@@ -352,10 +349,10 @@ views:
     state:
       element_type: link
       listing_mode: list
-      current_body_item: 8
+      current_body_item: 9
       body_items:
         -
-          id: 8
+          id: 9
           selected_links: [ 0 ]
   -
     id: 15
@@ -403,7 +400,7 @@ views:
     class: PythonConsoleView
 toolbars:
   "TimeBar":
-    current_time: 16.546
+    current_time: 1.902
     min_time: 0
     max_time: 72.445
     frame_rate: 1000
@@ -445,7 +442,7 @@ Body:
         show_cm_projection: false
         show_zmp: false
       -
-        body_item: 8
+        body_item: 9
         show_cm: false
         show_cm_projection: false
         show_zmp: false
